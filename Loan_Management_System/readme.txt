@@ -1,35 +1,26 @@
-Free Download Source Code "Loan Management System"
+=====================================================
+LOAN MANAGEMENT SYSTEM - LOGIN & DATABASE CREDENTIALS
+=====================================================
 
-FIRST Download
+1. ADMIN WEB APPLICATION LOGIN DETAILS:
+   ------------------------------------
+   Login URL: http://localhost:8080/login.php  (or https://<your-app>.onrender.com/login.php)
+   Username / ID: admin
+   Password:      admin123
+   User Role:     Administrator (Full Access)
 
-1.XAMPP
+2. AIVEN CLOUD MYSQL DATABASE DETAILS:
+   ------------------------------------
+   Host:     mysql-1a85412b-maheshchouhanmsk12-c513.a.aivencloud.com
+   Port:     26284
+   User:     avnadmin
+   Password: AVNS_ + LSLDt5z4adK49GLlTT8 (Base64: QVZOU19MU0xEdDV6NGFkSzQ5R0xsVFQ4)
+   Database: loan_db (or defaultdb)
+   SSL Mode: REQUIRED (MYSQLI_CLIENT_SSL)
 
-2."TEXT EDITOR" NOTEPAD++ OR SUBLIME TEXT 3 / ETC.
+3. 1-CLICK DATABASE SETUP TOOL:
+   ----------------------------
+   URL:      http://localhost:8080/db_setup.php (or https://<your-app>.onrender.com/db_setup.php)
+   Feature:  Health check, auto table verification & 1-click SQL importer.
 
-3"Loan_Management_System"
-
-4. Download the zip file/ download winrar
-
-5. Extract the file and copy "Loan_Management_System" folder
-
-6.Paste inside root directory/ where you install xammp local disk C: drive D: drive E: paste: (for xampp/htdocs, 
-
-7. Open PHPMyAdmin (http://localhost/phpmyadmin)
-
-8. Create a database with name loan_db
-
-6. Import loan_db.sql file(given inside the zip package in SQL file folder)
-
-7.Run the script http://localhost/Loan_Management_System
-
-
-**LOGIN DETAILS** 
-
-creat your own staff
- 
-Admin
-user: admin
-pass: admin123
-
-****** https:1sourcecodr.blogspot.com ******
-Subcribe my You tube Channel **** 1 Source code ****
+=====================================================

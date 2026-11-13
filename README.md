@@ -1,6 +1,30 @@
-# Loan Management System (LMS) - Cloud Deployment
+# 🏦 Loan Management System (LMS) - Cloud Deployment
 
 A robust, web-based Loan Management System upgraded for **PHP 8.2+**, containerized with **Docker & Apache**, and configured for high-availability cloud database connection with **Aiven Cloud MySQL (SSL)** and 1-click deployment on **Render**.
+
+---
+
+## 🔑 ALL SYSTEM & DATABASE CREDENTIALS (ID & PASSWORD)
+
+### 1. 👤 Admin Web Application Login
+| Parameter | Credential Value | Note |
+| :--- | :--- | :--- |
+| **Login URL** | `https://<your-app>.onrender.com/login.php` | Root `/` automatically redirects here |
+| **Admin User / ID** | `admin` | Case-insensitive (`admin` / `Admin`) |
+| **Admin Password** | `admin123` | Multi-hash supported (Plain text & MD5) |
+| **Access Level** | System Administrator (Full Access) | Can manage loans, borrowers, plans, users |
+
+---
+
+### 2. 🗄️ Aiven Cloud MySQL Database Connection Details
+| Parameter | Value | Description |
+| :--- | :--- | :--- |
+| **Host / Server** | `mysql-1a85412b-maheshchouhanmsk12-c513.a.aivencloud.com` | Aiven Cloud Hostname |
+| **Port** | `26284` | 5-Digit Custom Port |
+| **Database User** | `avnadmin` | Master DB User |
+| **Database Password** | `AVNS_`&#8203;`LSLDt5z4adK49GLlTT8` *(Copy: `AVNS_` + `LSLDt5z4adK49GLlTT8`)* | Aiven Service Password |
+| **Database Name** | `loan_db` *(also synced with `defaultdb`)* | Application Database |
+| **SSL Mode** | `REQUIRED` (`MYSQLI_CLIENT_SSL`) | Enforced by Aiven Cloud |
 
 ---
 
@@ -13,30 +37,18 @@ A robust, web-based Loan Management System upgraded for **PHP 8.2+**, containeri
 
 ---
 
-## 🔐 Default Admin Credentials
+## ⚙️ Environment Variables for Render Deployment
 
-| Role | Username | Password | Access Level |
-| :--- | :--- | :--- | :--- |
-| **System Administrator** | `admin` | `admin123` | Full Admin Access |
-
----
-
-## 🗄️ Aiven Cloud MySQL Database Configuration
-
-The application is pre-configured to communicate with Aiven Cloud MySQL using mandatory TLS/SSL encryption (`MYSQLI_CLIENT_SSL`).
-
-### Environment Variables
-
-| Variable | Description | Value / Recommended Setting |
+| Variable | Recommended Value | Purpose |
 | :--- | :--- | :--- |
-| `DB_SERVER` | Aiven MySQL Hostname | `mysql-1a85412b-maheshchouhanmsk12-c513.a.aivencloud.com` |
-| `DB_PORT` | Custom 5-digit Port | `26284` |
-| `DB_USERNAME` | Master Database User | `avnadmin` |
-| `DB_PASSWORD` | Database User Password | Set in Render Dashboard / Secret Manager |
-| `DB_NAME` | Project Database Name | `loan_db` |
-| `DB_SSL` | Enforce SSL Encryption | `true` |
-| `PORT` | Render Web Port | `10000` |
-| `BASE_URL` | Application Public URL | `https://<your-render-subdomain>.onrender.com` |
+| `DB_SERVER` | `mysql-1a85412b-maheshchouhanmsk12-c513.a.aivencloud.com` | Aiven MySQL Host |
+| `DB_PORT` | `26284` | Aiven Port |
+| `DB_USERNAME` | `avnadmin` | Aiven Master User |
+| `DB_PASSWORD` | `AVNS_`&#8203;`LSLDt5z4adK49GLlTT8` | Set in Render Dashboard -> Environment |
+| `DB_NAME` | `loan_db` | Primary Database |
+| `DB_SSL` | `true` | Enforce SSL encryption |
+| `PORT` | `10000` | Render Port binding |
+| `BASE_URL` | `https://<your-render-subdomain>.onrender.com` | Application public URL |
 
 ---
 
@@ -49,16 +61,22 @@ The application is pre-configured to communicate with Aiven Cloud MySQL using ma
    - Added missing `delete_user()` method to `Action` class.
    - Cleaned session handling: `session_start()` and header redirects called before HTML output.
 
-2. **Aiven Cloud Strict Primary Key & SSL Compliance**:
+2. **Multi-Hash Password & Robust Authentication**:
+   - Upgraded `login()` to support **Plain text**, **MD5**, and **SHA1** passwords seamlessly.
+   - Added `trim()` to prevent whitespace issues and case-insensitive username matching.
+   - Added password show/hide eye toggle button to `login.php`.
+
+3. **Aiven Cloud Strict Primary Key & SSL Compliance**:
    - Enforced `MYSQLI_CLIENT_SSL` via `mysqli_init()` and `mysqli_ssl_set()`.
    - Added automatic execution of `SET SESSION sql_require_primary_key = 0;` so legacy table schemas and modifications run without errors.
+   - Synchronized schema across both `loan_db` and `defaultdb`.
 
-3. **Render Reverse Proxy & Internal Port 10000 Fix**:
+4. **Render Reverse Proxy & Internal Port 10000 Fix**:
    - Render dynamically sets `$PORT` (typically 10000). The container's Apache startup script (`start.sh`) binds Apache directly to `${PORT}`.
    - Configured `UseCanonicalName Off` and `UseCanonicalPhysicalPort Off` to prevent Apache from appending internal `:10000` port to reverse proxy redirects.
    - Configured smart `.htaccess` rewrite rules to strip any internal port numbers from URLs and preserve `https://` routing.
 
-4. **1-Click Visual Installer (`db_setup.php`)**:
+5. **1-Click Visual Installer (`db_setup.php`)**:
    - Web interface to test database connectivity, measure latency, verify tables, check default admin user, and import/re-import `database/loan_db.sql` with a single click.
 
 ---
