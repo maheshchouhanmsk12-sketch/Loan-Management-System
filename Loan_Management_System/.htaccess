@@ -1,0 +1,24 @@
+# Render Reverse Proxy & Apache Compatibility Configuration
+Options -Indexes +FollowSymLinks
+DirectoryIndex index.php index.html
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Detect HTTPS behind Render Reverse Proxy
+    SetEnvIf X-Forwarded-Proto "^https$" HTTPS=on
+
+    # Prevent Apache from appending internal reverse proxy port (e.g. :10000)
+    RewriteCond %{HTTP_HOST} ^([^:]+):[0-9]+$
+    RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+    RewriteRule ^admin/?$ index.php [L,QSA]
+    RewriteRule ^admin/login/?$ login.php [L,QSA]
+    RewriteRule ^admin/index/?$ index.php [L,QSA]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>

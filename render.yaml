@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: loan-management-system
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /db_setup.php
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: DB_SERVER
+        value: mysql-1a85412b-maheshchouhanmsk12-c513.a.aivencloud.com
+      - key: DB_PORT
+        value: "26284"
+      - key: DB_USERNAME
+        value: avnadmin
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        value: loan_db
+      - key: DB_SSL
+        value: "true"
+      - key: BASE_URL
+        sync: false
