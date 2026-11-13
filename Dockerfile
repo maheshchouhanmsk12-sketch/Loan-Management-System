@@ -34,3 +34,4 @@ EXPOSE 10000
 
 # Execute start.sh
 CMD ["/usr/local/bin/start.sh"]
+

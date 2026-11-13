@@ -32,3 +32,4 @@ chmod -R 755 /var/www/html
 
 echo "Starting Apache on port ${PORT}..."
 exec apache2-foreground
+

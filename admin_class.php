@@ -26,14 +26,32 @@ Class Action {
 
 	function login(){
 		extract($_POST);
-		$username = isset($username) ? $this->db->real_escape_string($username) : '';
-		$password = isset($password) ? $this->db->real_escape_string($password) : '';
+		$username = isset($username) ? trim($this->db->real_escape_string($username)) : '';
+		$password = isset($password) ? trim($password) : '';
+		$password_esc = $this->db->real_escape_string($password);
+		$password_md5 = md5($password);
+		$password_sha1 = sha1($password);
 
-		$qry = $this->db->query("SELECT * FROM users where username = '".$username."' and password = '".$password."' ");
+		$sql = "SELECT * FROM users WHERE (username = '{$username}' OR LOWER(username) = LOWER('{$username}')) AND (password = '{$password_esc}' OR password = '{$password_md5}' OR password = '{$password_sha1}') ";
+		$qry = $this->db->query($sql);
+
 		if($qry && $qry instanceof mysqli_result && $qry->num_rows > 0){
-			foreach ($qry->fetch_array() as $key => $value) {
+			$user_data = $qry->fetch_array();
+			foreach ($user_data as $key => $value) {
 				if($key != 'password' && $key != 'passwors' && !is_numeric($key))
 					$_SESSION['login_'.$key] = $value;
+			}
+			if (empty($_SESSION['login_name'])) {
+				if (!empty($user_data['name'])) {
+					$_SESSION['login_name'] = $user_data['name'];
+				} else {
+					$fname = $user_data['firstname'] ?? '';
+					$lname = $user_data['lastname'] ?? '';
+					$_SESSION['login_name'] = trim($fname . ' ' . $lname) ?: 'Administrator';
+				}
+			}
+			if (empty($_SESSION['login_type'])) {
+				$_SESSION['login_type'] = $user_data['type'] ?? 1;
 			}
 			return 1;
 		}else{

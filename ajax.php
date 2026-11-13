@@ -7,7 +7,7 @@ $crud = new Action();
 if($action == 'login'){
 	$login = $crud->login();
 	if($login)
-		echo $login;
+		echo trim($login);
 }
 if($action == 'login2'){
 	$login = $crud->login2();
